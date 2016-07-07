@@ -60,7 +60,7 @@ yum install -y python-pip python-devel python-netaddr \
 pip install gsutil
 
 # start docker
-systemctl start docker etcd
+systemctl start docker
 
 # Set GOPATH
 mkdir go
