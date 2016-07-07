@@ -3,9 +3,9 @@ set -uo pipefail
 setenforce 1
 
 # Fix sudo require tty
-sudo grep -q "# Defaults    requiretty" /etc/sudoers
+grep -q "# Defaults    requiretty" /etc/sudoers
 if [ $? -ne 0 ] ; then
-  sudo sed -i 's/Defaults    requiretty/# Defaults    requiretty/' /etc/sudoers
+  sed -i 's/Defaults    requiretty/# Defaults    requiretty/' /etc/sudoers
 fi
 
 # Holds the exit code and is updated if an error that should not stop
