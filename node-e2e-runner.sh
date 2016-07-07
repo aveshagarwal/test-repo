@@ -54,13 +54,13 @@ yum install -y golang tar
 yum install -y python-pip python-devel python-netaddr \
                gcc ansible \
                openssl-devel python-devel \
-               python-setuptools libffi-devel docker
+               python-setuptools libffi-devel docker etcd
 
 # Install gsutil through pip (for e2e tests)
 pip install gsutil
 
 # start docker
-systemctl start docker
+systemctl start docker etcd
 
 # Set GOPATH
 mkdir go
@@ -75,12 +75,12 @@ echo "Building and testing kubernetes from hack directory:"
 pushd $GOPATH/src/k8s.io/kubernetes
 
 # Set the KUBE_GIT_VERSION
-export KUBE_GIT_VERSION=$(git describe --match "v*")
-echo "Setting KUBE_GIT_VERSION to $KUBE_GIT_VERSION"
+#export KUBE_GIT_VERSION=$(git describe --match "v*")
+#echo "Setting KUBE_GIT_VERSION to $KUBE_GIT_VERSION"
 
 # Install etcd and add it to PATH
-./hack/install-etcd.sh
-export PATH=third_party/etcd:${PATH}
+#./hack/install-etcd.sh
+#export PATH=third_party/etcd:${PATH}
 
 # Then run tests
 for cmd in e2e-node-test.sh; do
