@@ -85,6 +85,7 @@ export PATH=third_party/etcd:${PATH}
 # Then run tests
 for cmd in e2e-node-test.sh; do
     echo -e "\n\nRunning hack/$cmd\n"
+     make WHAT=vendor/github.com/onsi/ginkgo/ginkgo
     ./hack/$cmd
     err $? "ERROR: Test $cmd failed\nSTATUS: $?" 0 "failure"
 done
