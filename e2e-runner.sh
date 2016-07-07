@@ -64,13 +64,17 @@ yum install -y python-pip python-devel python-netaddr \
 # Install gsutil through pip (for e2e tests)
 pip install gsutil
 
-
+# Set GOPATH
+mkdir go
+export GOPATH=`pwd`/go
+mkdir -p $GOPATH/src/k8s.io
+mv kubernetes $GOPATH/src/k8s.io/
 
 
 echo "--------------------------------------------------------------------------------"
 echo "Building and testing kubernetes from hack directory:"
 
-pushd kubernetes
+pushd $GOPATH/src/k8s.io/kubernetes
 
 # Set the KUBE_GIT_VERSION
 export KUBE_GIT_VERSION=$(git describe --match "v*")
@@ -230,7 +234,7 @@ export FIRST_MASTER_IP=`echo $CLUSTER_IP_MASTERS | cut -d, -f1`
 export PATH=bin/linux/amd64:${PATH}
 
 # Run e2e from the slave against the master
-pushd kubernetes/_output/local
+pushd $GOPATH/src/k8s.io/kubernetes/_output/local
 $WORKSPACE/kubernetes/_output/local/go/bin/e2e.test -host="https://$FIRST_MASTER_IP:6443" -provider="local" -ginkgo.v=true -ginkgo.focus="Conformance" -alsologtostderr -kubeconfig="$WORKSPACE/kubeconfig" -report-dir="$WORKSPACE/artifacts"
 
 
