@@ -59,10 +59,13 @@ yum install -y golang tar
 yum install -y python-pip python-devel python-netaddr \
                gcc ansible \
                openssl-devel python-devel \
-               python-setuptools libffi-devel
+               python-setuptools libffi-devel docker
 
 # Install gsutil through pip (for e2e tests)
 pip install gsutil
+
+# start docker
+systemctl start docker
 
 # Set GOPATH
 mkdir go
