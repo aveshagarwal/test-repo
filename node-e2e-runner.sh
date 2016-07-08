@@ -28,19 +28,14 @@ err() {
     fi
 }
 
+mkdir -p $WORKSPACE/artifacts
+
 echo "--------------------------------------------------------------------------------"
 echo "Test Environment:"
 # TODO(jchaloup): Filter out some envs with internal IPs and sensitive data
 # use whitelist instead?
 printenv | sort
 echo "--------------------------------------------------------------------------------"
-
-# Private envs
-#EXISTING_NODES=`grep "EXISTING_NODES" $WORKSPACE/RESOURCES.txt | cut -d= -f2`
-#CLUSTER_IP_MASTERS=`grep "CLUSTER_IP_MASTERS" $WORKSPACE/RESOURCES.txt | cut -d= -f2`
-
-
-
 
 
 echo "--------------------------------------------------------------------------------"
@@ -74,14 +69,6 @@ echo "Building and testing kubernetes from hack directory:"
 
 pushd $GOPATH/src/k8s.io/kubernetes
 
-# Set the KUBE_GIT_VERSION
-#export KUBE_GIT_VERSION=$(git describe --match "v*")
-#echo "Setting KUBE_GIT_VERSION to $KUBE_GIT_VERSION"
-
-# Install etcd and add it to PATH
-#./hack/install-etcd.sh
-#export PATH=third_party/etcd:${PATH}
-
 # Then run tests
 for cmd in e2e-node-test.sh; do
     echo -e "\n\nRunning hack/$cmd\n"
@@ -90,6 +77,18 @@ for cmd in e2e-node-test.sh; do
     err $? "ERROR: Test $cmd failed\nSTATUS: $?" 0 "failure"
 done
 popd
+
+echo "--------------------------------------------------------------------------------"
+
+echo "--------------------------------------------------------------------------------"
+echo "Collecting logs:"
+
+# Get build.log
+echo "Retrieving build.log:"
+wget $BUILD_URL/consoleText -O $WORKSPACE/build.log
+
+echo "Retrieving test logs:"
+cp $GOPATH/src/k8s.io/kubernetes/test/e2e_node/*.log $WORKSPACE/artifacts/
 
 echo "--------------------------------------------------------------------------------"
 
